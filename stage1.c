@@ -15,20 +15,40 @@ typedef struct node{
   int end_of_key;
 }node_t;
 
-node_t insert(node_t *pNode, char* key, int weight);
+/*prototyping*/
+node_t *insert(node_t *pNode, char* word, int weight);
 void find_and_traverse(struct node* pNode , char * prefix);
 void traverse(struct node* pNode, char* buffer, int depth);
 
 
+/*main function*/
+int main(int argc, char *argv[]){
+node_t *pNode=NULL;
+char *word;
+int weight;
+
+word=malloc((250+1)*(sizeof(char)));
+
+  while(scanf("%d;%250[^\n]", &weight, word)!=EOF) {
+    insert(pNode,word,weight);
+  }
+
+find_and_traverse(pNode, "Melb");
+
+  return 0;
+}
+
+
+
 /*new node function for pNode = NULL*/
 node_t
-*new_node(char key){
+*new_node(char word){
 
     node_t *new;
 
     new=malloc(sizeof(struct node));
 
-    new->key=key;
+    new->key=word;
     new->left=NULL;
     new->right=NULL;
     new->equal=NULL;
@@ -38,29 +58,29 @@ node_t
 
 
 /*Insert function*/
-node_t *insert(node_t *pNode , char* key , int weight ){
+node_t *insert(node_t *pNode , char* word , int weight ){
   /*insert new node if tree is empty*/
   if (pNode==NULL){
-    pNode=new_node(*key);
+    pNode=new_node(*word);
   }
   /*current char in key is smaller than char in pData*/
-  if (*key < pNode->key){
-    insert(pNode->left,key, weight);
+  if (*word < pNode->key){
+    insert(pNode->left,word, weight);
   }
   /*current char in key is equal to char in pData*/
-  else if(*key== pNode->key){
+  else if(*word== pNode->key){
     /*next char in key is '\0'*/
-    if((*key+1)=='\0')/*end of flag*/{
+    if((*word+1)=='\0')/*end of flag*/{
       pNode->end_of_key=TRUE;
       pNode->weight=weight;
     }
     /*If the key contains more characters,
     insert them under the equal branch*/
-    else (pNode->equal= insert(pNode->equal,key+1,weight));
+    else (pNode->equal= insert(pNode->equal,word+1,weight));
   }
   /*If current char in key is greater than char in pData
   Insert character on the right branch*/
-  else (pNode->right = insert(pNode->right,key,weight));
+  else (pNode->right = insert(pNode->right,word,weight));
 
   return pNode;
 }
